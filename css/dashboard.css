@@ -1,0 +1,323 @@
+/* Reset básico y variables de color */
+:root {
+    --bg-color: #ffffff;
+    --header-blue: #4d709a;
+    --nav-blue: #5b7da6;
+    --text-dark: #333;
+    --text-muted: #666;
+    --border-color: #ddd;
+    --panel-bg: #fff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    font-size: 13px;
+}
+
+/* Encabezado Superior */
+.top-header {
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.logo img {
+    height: 180x;
+    width: 180px;
+    object-fit: contain;
+}
+
+.search-bar {
+    position: relative;
+    width: 350px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.search-bar i {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    color: var(--text-muted);
+}
+
+.user-menu span {
+    margin-left: 15px;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+/* Navegación Principal */
+.main-nav {
+    background-color: var(--header-blue);
+    color: white;
+    padding: 0 20px;
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.main-nav li {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.main-nav li:hover {
+    background-color: var(--nav-blue);
+}
+
+/* Título de la página */
+.page-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+}
+
+.page-title h2 {
+    color: var(--header-blue);
+    font-weight: normal;
+}
+
+.page-actions span {
+    margin-left: 15px;
+    color: var(--header-blue);
+    cursor: pointer;
+}
+
+/* Sistema de Grid del Dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 250px 1fr 300px;
+    gap: 20px;
+    padding: 0 20px 20px 20px;
+}
+
+/* Estilos de los Paneles (Cajas blancas) */
+.panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.panel-header {
+    background-color: #f9f9f9;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+}
+
+.panel-content {
+    padding: 15px;
+}
+
+/* Utilidades de texto */
+.green-text { color: #000000; }
+.red-text { color: #000000; }
+
+/* Reminders */
+.reminder-item {
+    margin-bottom: 15px;
+}
+.reminder-item .count {
+    display: block;
+    font-size: 24px;
+    border-left: 3px solid #ccc;
+    padding-left: 10px;
+}
+.reminder-item .count.highlight {
+    border-left-color: #007bff;
+    color: #007bff;
+}
+.reminder-item .desc {
+    color: #007bff;
+    font-size: 12px;
+    padding-left: 13px;
+}
+
+/* Shortcuts */
+.shortcuts ul {
+    list-style: none;
+    margin-top: 10px;
+}
+.shortcuts li {
+    padding: 5px 0;
+    color: #007bff;
+    cursor: pointer;
+}
+.shortcuts .shortcut-category {
+    color: var(--text-dark);
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* SuiteAccess Cards */
+.suite-access {
+    display: flex;
+    gap: 10px;
+}
+.card {
+    flex: 1;
+    padding: 20px 10px;
+    text-align: center;
+    border-radius: 3px;
+    font-weight: bold;
+    color: var(--text-dark);
+    border-top: 4px solid #ccc;
+    background-color: #fafafa;
+}
+.card.yellow { border-top-color: #f1c40f; background-color: #fdfae6;}
+.card.pink { border-top-color: #e84393; background-color: #fcecf3;}
+.card.green { border-top-color: #2ecc71; background-color: #ebf9f1;}
+.card.blue { border-top-color: #3498db; background-color: #ecf5fc;}
+
+/* KPI Cards */
+.kpi-cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.kpi-card {
+    flex: 1;
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    text-align: left;
+    border-radius: 4px;
+}
+.kpi-card span {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+.kpi-card .value {
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+/* Tabla KPI */
+.kpi-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.kpi-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 11px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+.kpi-table td {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Chart Controls */
+.chart-controls {
+    margin-bottom: 15px;
+}
+.chart-controls select {
+    padding: 5px;
+    border: 1px solid var(--border-color);
+}
+
+/*Botones de acción rápida  */
+/* 1. El fondo oscuro que cubre la pantalla y ESCONDE el formulario */
+/* ==========================================
+   ESTILOS DE LAS VENTANAS EMERGENTES (MODALES)
+   ========================================== */
+
+.modal-oculto {
+    display: none; /* Las hace invisibles por defecto */
+    position: fixed; /* Las arranca del fondo y las hace flotar */
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.6); 
+    align-items: center; 
+    justify-content: center; /* Las centra en la pantalla */
+    z-index: 1000; 
+}
+
+.modal-visible {
+    display: flex;
+}
+
+.modal-contenido {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    width: 400px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.cerrar-modal {
+    position: absolute;
+    top: 15px; right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+}
+
+.cerrar-modal:hover {
+    color: #333;
+}
+
+.grupo-input {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.grupo-input label {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.grupo-input input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn-guardar {
+    margin-top: 25px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+}
