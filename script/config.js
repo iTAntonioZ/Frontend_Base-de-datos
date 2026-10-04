@@ -7,11 +7,12 @@ const isLocalhost = Boolean(
   window.location.hostname.startsWith('192.168.')
 );
 
-// 2. Coloca aquí el dominio que te entregó Vercel para tu backend
-const PROD_API_URL = 'https://backdb.vercel.app/'; // <-- Sustituye con tu URL real de Vercel
+// 2. Dominio de producción (sin barra diagonal al final)
+const PROD_API_URL = 'https://backdb.vercel.app';
 
-// 3. Selección dinámica de URL
-const API_URL = isLocalhost ? 'http://localhost:3000' : PROD_API_URL;
+// 3. Selección dinámica y limpieza de cualquier barra final residual
+const BASE_URL = isLocalhost ? 'http://localhost:3000' : PROD_API_URL;
+const API_URL = BASE_URL.replace(/\/+$/, '');
 
 const Auth = {
   setSession(token, usuario) {
@@ -69,13 +70,16 @@ async function apiRequest(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  // Asegura exactamente una sola barra entre la base y la ruta
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+
+  const response = await fetch(`${API_URL}${cleanEndpoint}`, {
     ...options,
     headers,
   });
 
   // Si da 401 pero NO es el login, entonces sí expiró el token
-  if (response.status === 401 && !endpoint.includes('/auth/login')) {
+  if (response.status === 401 && !cleanEndpoint.includes('/auth/login')) {
     Auth.logout();
     throw new Error('Sesión expirada o no autorizada');
   }
