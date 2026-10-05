@@ -4,10 +4,12 @@ const isLocalhost = Boolean(
   window.location.hostname.startsWith('192.168.')
 );
 
+// URL del túnel limpia (sin barra final)
 const TUNNEL_API_URL = 'https://gore-wilson-warranty-convention.trycloudflare.com';
 const API_URL = isLocalhost ? 'http://localhost:3000' : TUNNEL_API_URL;
 
-const SESSION_MAX_AGE_MS = 1 * 60 * 1000; 
+// Tiempo de vida de la sesión (8 minutos)
+const SESSION_MAX_AGE_MS = 8 * 60 * 1000; 
 
 const Auth = {
   setSession(token, usuario) {
@@ -63,7 +65,6 @@ const Auth = {
     if (this.isSessionValid()) {
       window.location.href = 'dashboard.html';
     } else {
-      // Si el token es antiguo, se limpia para que no interfiera
       localStorage.removeItem('access_token');
       localStorage.removeItem('usuario');
       localStorage.removeItem('session_created_at');
@@ -96,6 +97,9 @@ const Auth = {
   resetTimer();
 })();
 
+// ==========================================
+// CLIENTE HTTP CON SANITIZACIÓN DE RUTAS
+// ==========================================
 async function apiRequest(endpoint, options = {}) {
   const token = Auth.getToken();
   const headers = {
@@ -108,14 +112,17 @@ async function apiRequest(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  // Elimina barras al final de la base y al inicio del endpoint para prevenir "//"
+  const baseUrl = API_URL.replace(/\/+$/, '');
+  const cleanEndpoint = endpoint.replace(/^\/+/, '');
+  const finalUrl = `${baseUrl}/${cleanEndpoint}`;
 
-  const response = await fetch(`${API_URL}${cleanEndpoint}`, {
+  const response = await fetch(finalUrl, {
     ...options,
     headers,
   });
 
-  if (response.status === 401 && !cleanEndpoint.includes('/auth/login')) {
+  if (response.status === 401 && !cleanEndpoint.includes('auth/login')) {
     Auth.logout();
     throw new Error('Sesión expirada o no autorizada');
   }
