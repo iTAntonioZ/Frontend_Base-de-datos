@@ -4,7 +4,7 @@ const isLocalhost = Boolean(
   window.location.hostname.startsWith('192.168.')
 );
 
-const TUNNEL_API_URL = 'https://tu-url-de-tunel.trycloudflare.com';
+const TUNNEL_API_URL = 'https://gore-wilson-warranty-convention.trycloudflare.com/';
 const API_URL = isLocalhost ? 'http://localhost:3000' : TUNNEL_API_URL;
 
 const SESSION_MAX_AGE_MS = 1 * 60 * 1000; 
@@ -29,7 +29,7 @@ const Auth = {
     const timeStr = localStorage.getItem('session_created_at');
     return timeStr ? parseInt(timeStr, 10) : null;
   },
-  
+
   isSessionValid() {
     const token = this.getToken();
     const createdAt = this.getSessionCreatedAt();
