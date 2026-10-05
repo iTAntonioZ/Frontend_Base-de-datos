@@ -1,23 +1,19 @@
-// script/config.js
-
-// 1. Detectar si estamos ejecutando en entorno local
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
   window.location.hostname === '127.0.0.1' ||
   window.location.hostname.startsWith('192.168.')
 );
 
-// 2. Dominio de producción (sin barra diagonal al final)
-const PROD_API_URL = 'https://backdb.vercel.app';
+const TUNNEL_API_URL = 'https://tu-url-de-tunel.trycloudflare.com';
+const API_URL = isLocalhost ? 'http://localhost:3000' : TUNNEL_API_URL;
 
-// 3. Selección dinámica y limpieza de cualquier barra final residual
-const BASE_URL = isLocalhost ? 'http://localhost:3000' : PROD_API_URL;
-const API_URL = BASE_URL.replace(/\/+$/, '');
+const SESSION_MAX_AGE_MS = 1 * 60 * 1000; 
 
 const Auth = {
   setSession(token, usuario) {
     localStorage.setItem('access_token', token);
     localStorage.setItem('usuario', JSON.stringify(usuario));
+    localStorage.setItem('session_created_at', Date.now().toString());
   },
 
   getToken() {
@@ -29,40 +25,82 @@ const Auth = {
     return userStr ? JSON.parse(userStr) : null;
   },
 
-  isAuthenticated() {
-    return !!this.getToken();
+  getSessionCreatedAt() {
+    const timeStr = localStorage.getItem('session_created_at');
+    return timeStr ? parseInt(timeStr, 10) : null;
+  },
+  
+  isSessionValid() {
+    const token = this.getToken();
+    const createdAt = this.getSessionCreatedAt();
+
+    if (!token || !createdAt) {
+      return false;
+    }
+
+    const elapsed = Date.now() - createdAt;
+    return elapsed < SESSION_MAX_AGE_MS;
   },
 
-  hasPermission(permiso) {
-    const user = this.getUser();
-    if (!user) return false;
-    if (user.rol === 'ADMIN') return true;
-    return Array.isArray(user.permisos) && user.permisos.includes(permiso);
+  isAuthenticated() {
+    return !!this.getToken();
   },
 
   logout() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('usuario');
+    localStorage.removeItem('session_created_at');
     window.location.href = 'auth.html';
   },
 
   requireAuth() {
-    if (!this.isAuthenticated()) {
-      window.location.href = 'auth.html';
+    if (!this.isSessionValid()) {
+      this.logout();
     }
   },
 
   redirectIfAuthenticated() {
-    if (this.isAuthenticated()) {
+    if (this.isSessionValid()) {
       window.location.href = 'dashboard.html';
+    } else {
+      // Si el token es antiguo, se limpia para que no interfiera
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('session_created_at');
     }
   }
 };
+
+// ==========================================
+// CONTROL DE INACTIVIDAD (8 MINUTOS)
+// ==========================================
+(function initInactivityTracker() {
+  const INACTIVITY_TIMEOUT_MS = 8 * 60 * 1000; 
+  let timer;
+
+  function resetTimer() {
+    clearTimeout(timer);
+    if (Auth.isAuthenticated() && !window.location.pathname.endsWith('auth.html')) {
+      timer = setTimeout(() => {
+        alert('Tu sesión ha expirado por inactividad.');
+        Auth.logout();
+      }, INACTIVITY_TIMEOUT_MS);
+    }
+  }
+
+  const userEvents = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+  userEvents.forEach((event) => {
+    window.addEventListener(event, resetTimer, { passive: true });
+  });
+
+  resetTimer();
+})();
 
 async function apiRequest(endpoint, options = {}) {
   const token = Auth.getToken();
   const headers = {
     'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': 'true',
     ...(options.headers || {}),
   };
 
@@ -70,7 +108,6 @@ async function apiRequest(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // Asegura exactamente una sola barra entre la base y la ruta
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
 
   const response = await fetch(`${API_URL}${cleanEndpoint}`, {
@@ -78,7 +115,6 @@ async function apiRequest(endpoint, options = {}) {
     headers,
   });
 
-  // Si da 401 pero NO es el login, entonces sí expiró el token
   if (response.status === 401 && !cleanEndpoint.includes('/auth/login')) {
     Auth.logout();
     throw new Error('Sesión expirada o no autorizada');

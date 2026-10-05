@@ -1,6 +1,7 @@
 // script/auth.js
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Comprueba si la sesión tiene menos de 1 minuto: si es así, va al dashboard; si no, permanece aquí
   if (typeof Auth !== 'undefined') {
     Auth.redirectIfAuthenticated();
   }
@@ -16,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Solo se limpia el mensaje al pulsar nuevamente el botón
     if (errorMsg) {
       errorMsg.textContent = '';
       errorMsg.style.display = 'none';
@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ user, pas }),
       });
 
+      // Registra el token y la hora actual
       Auth.setSession(data.access_token, data.usuario);
       window.location.href = 'dashboard.html';
     } catch (err) {

@@ -1,0 +1,153 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    /* Fondo degradado suave en tonos azules como en el Figma */
+    background: linear-gradient(135deg, #7aa5fc 0%, #8ec5fc 50%, #d4e7fe 100%);
+    display: flex;
+    flex-direction: column;
+    color: #333;
+}
+
+/* Barra superior */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 48px;
+}
+
+.brand-capsule {
+    background-color: #ffffff;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-weight: 700;
+    color: #4a6fa5;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.avatar-circle {
+    width: 44px;
+    height: 44px;
+    background-color: #15a521;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border: none;
+}
+
+.avatar-circle:hover {
+    transform: scale(1.05);
+}
+
+/* Contenedor Principal (Main Layout) */
+.main-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    padding: 24px 48px 64px 48px;
+}
+
+.preview-card {
+    width: 320px;
+    height: 320px;
+    background-image: url('../assets/icono_safo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 36px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Bloques de la derecha */
+.content-right {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 460px;
+    width: 100%;
+}
+
+.pill-small {
+    background-color: #e5e7eb;
+    height: 18px;
+    width: 70%;
+    border-radius: 9px;
+}
+
+.card-block {
+    background-color: #e5e7eb;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-weight: 600;
+    color: #4b5563;
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* Sección inferior con degradado a blanco */
+section {
+    width: 100%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 35%, #ffffff 70%, #ffffff 100%);
+    padding: 80px 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    color: #2e384d;
+}
+
+/* Vistas de Login / Dashboard */
+.card-auth {
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    background-color: #3b4252;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
