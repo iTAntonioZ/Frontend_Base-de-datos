@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planes de Licencia - ERP SAFO</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .module-container { padding: 32px; max-width: 1000px; margin: auto; }
+
+        /* Menú Hamburguesa Flotante */
+        .floating-menu-container { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+        
+        .btn-hamburger {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background-color: #10b981;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s;
+        }
+        .btn-hamburger:hover { transform: scale(1.05); }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 12px 0;
+            min-width: 180px;
+            border: 1px solid #e2e8f0;
+        }
+        .dropdown-menu.show { display: block; }
+
+        .dropdown-menu a, .dropdown-menu button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .dropdown-menu a:hover, .dropdown-menu button:hover { background-color: #f8fafc; }
+        .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 8px 0; }
+        .text-login { color: #2563eb !important; font-weight: 600 !important; }
+        .text-logout { color: #ef4444 !important; font-weight: 600 !important; }
+
+        .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 28px; }
+
+        .plan-card { background: #fff; border-radius: 14px; padding: 32px 24px; border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+        .plan-card.featured { border: 2px solid #2563eb; transform: scale(1.02); }
+        .popular-tag { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #2563eb; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+
+        .plan-title { font-size: 1.3rem; color: #0f172a; font-weight: 700; margin-bottom: 8px; }
+        .plan-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 20px; }
+        .badge-annual { background: #dbeafe; color: #1e40af; }
+        .badge-monthly { background: #fef3c7; color: #92400e; }
+
+        .plan-features { list-style: none; padding: 0; margin: 24px 0; text-align: left; }
+        .plan-features li { padding: 10px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; color: #334155; display: flex; align-items: center; gap: 10px; }
+        .plan-features li i { color: #10b981; }
+
+        .btn-plan { display: block; padding: 12px; border-radius: 8px; font-weight: 600; text-decoration: none; text-align: center; transition: all 0.2s; }
+        .btn-primary { background: #2563eb; color: #fff; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-outline { background: #fff; color: #2563eb; border: 1px solid #2563eb; }
+        .btn-outline:hover { background: #eff6ff; }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="logo"><img src="assets/Logo.jpeg" alt="Logo Empresa"></div>
+    </header>
+
+    <!-- Menú Hamburguesa Flotante -->
+    <div class="floating-menu-container">
+        <button class="btn-hamburger" id="toggleMenuBtn" onclick="toggleNavMenu()">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="dropdown-menu" id="navDropdown">
+            <a href="index.html"><i class="fa-solid fa-house"></i> Inicio</a>
+            <a href="licencia.html"><i class="fa-solid fa-lock"></i> Licencia</a>
+            <a href="contact.html"><i class="fa-solid fa-phone"></i> Contáctanos</a>
+            <div class="dropdown-divider"></div>
+            <div id="authMenuAction"></div>
+        </div>
+    </div>
+
+    <div class="module-container">
+        <div style="text-align: center;">
+            <h2>Planes y Licencias del Sistema</h2>
+            <p style="color: #64748b; margin-top: 6px;">Selecciona la modalidad de licencia que mejor se adapte a las necesidades de tu empresa.</p>
+        </div>
+
+        <div class="plans-grid">
+            <div class="plan-card">
+                <div>
+                    <span class="plan-badge badge-monthly">Flexibilidad Mensual</span>
+                    <div class="plan-title">Licencia Mensual</div>
+                    
+                    <ul class="plan-features">
+                        <li><i class="fa fa-check-circle"></i> Acceso completo a módulos del ERP</li>
+                        <li><i class="fa fa-check-circle"></i> Emisión y gestión de facturas</li>
+                        <li><i class="fa fa-headset text-amber"></i> <strong>Soporte preventivo cada 2 meses</strong></li>
+                        <li><i class="fa fa-check-circle"></i> Actualizaciones continuas del sistema</li>
+                    </ul>
+                </div>
+                <a href="contact.html" class="btn-plan btn-outline"><i class="fa fa-info-circle"></i> Solicitar Información</a>
+            </div>
+
+            <div class="plan-card featured">
+                <span class="popular-tag">Más Recomendado</span>
+                <div>
+                    <span class="plan-badge badge-annual">Pago Único Anual</span>
+                    <div class="plan-title">Licencia Anual</div>
+                    
+                    <ul class="plan-features">
+                        <li><i class="fa fa-check-circle"></i> Un único pago al año (Ahorro garantizado)</li>
+                        <li><i class="fa fa-check-circle"></i> Módulos ilimitados de facturación y clientes</li>
+                        <li><i class="fa fa-headset text-blue"></i> <strong>Soporte técnico cada 6 meses</strong></li>
+                        <li><i class="fa fa-check-circle"></i> Respaldos programados de base de datos</li>
+                        <li><i class="fa fa-check-circle"></i> Atención prioritaria vía WhatsApp</li>
+                    </ul>
+                </div>
+                <a href="contact.html" class="btn-plan btn-primary"><i class="fa fa-shopping-cart"></i> Adquirir Licencia Anual</a>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    .main-footer {
+        background-color: #0f172a; /* Fondo oscuro / negro */
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 16px;
+        margin-top: 40px;
+        border-top: 1px solid #1e293b;
+        font-size: 0.9rem;
+    }
+
+    .main-footer p {
+        margin: 0;
+        color: #94a3b8;
+    }
+
+    .main-footer strong {
+        color: #ffffff;
+    }
+</style>
+
+<footer class="main-footer">
+    <p>&copy; <span id="copyrightYear"></span> <strong>SAFO</strong>. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    // Inserción dinámica del año actual
+    document.addEventListener('DOMContentLoaded', () => {
+        const yearSpan = document.getElementById('copyrightYear');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    });
+</script>
+
+    <script src="script/config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAuthOption();
+        });
+
+        function toggleNavMenu() {
+            document.getElementById('navDropdown').classList.toggle('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.floating-menu-container')) {
+                const dropdown = document.getElementById('navDropdown');
+                if (dropdown && dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        };
+
+        function renderAuthOption() {
+            const container = document.getElementById('authMenuAction');
+            if (typeof Auth !== 'undefined' && Auth.isSessionValid && Auth.isSessionValid()) {
+                container.innerHTML = `
+                    <button onclick="cerrarSesion()" class="text-logout">
+                        <i class="fa-solid fa-right-from-bracket"></i> Salir
+                    </button>
+                `;
+            } else {
+                container.innerHTML = `
+                    <a href="auth.html" class="text-login">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </a>
+                `;
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.clear();
+            sessionStorage.clear();
+            if (typeof Auth !== 'undefined' && typeof Auth.logout === 'function') {
+                Auth.logout();
+            } else {
+                window.location.href = 'auth.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -5,7 +5,8 @@ const isLocalhost = Boolean(
 );
 
 // URL del túnel limpia (sin barra final)
-const TUNNEL_API_URL = 'https://gore-wilson-warranty-convention.trycloudflare.com';
+const TUNNEL_API_URL = 'https://pod-decided-himself-plains.trycloudflare.com';
+
 const API_URL = isLocalhost ? 'http://localhost:3000' : TUNNEL_API_URL;
 
 // Tiempo de vida de la sesión (8 minutos)

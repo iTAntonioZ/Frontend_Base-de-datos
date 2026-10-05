@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración de Soporte - SAFO</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .panel-container { padding: 24px 32px; max-width: 1200px; margin: auto; }
+        .card { background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        table.erp-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        table.erp-table th, table.erp-table td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; font-size: 0.9rem; }
+        table.erp-table th { background: #0f172a; color: #fff; }
+        
+        .btn-resolver { background: #16a34a; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .btn-resolver:hover { background: #15803d; }
+    </style>
+</head>
+<body style="background-color: #f1f5f9;">
+
+    <header class="top-header" style="background: #0f172a;">
+        <div class="logo"><img src="assets/Logo.jpeg" alt="Logo Empresa"></div>
+        <div class="user-menu" style="color: #fff;">
+            <span><i class="fa fa-user-shield"></i> Técnico de Soporte</span>
+            <button onclick="logoutSoporte()" style="margin-left: 12px; background: #ef4444; color:#fff; border:none; padding:4px 10px; border-radius:6px; cursor:pointer;">Salir</button>
+        </div>
+    </header>
+
+    <div class="panel-container">
+        <div class="card">
+            <h2 style="color: #0f172a; margin-bottom: 8px;"><i class="fa fa-headset"></i> Gestor de Atenciones de Soporte</h2>
+            <p style="color: #64748b;">Administra, cambia estados y brinda respuesta a los tickets de los clientes.</p>
+
+            <table class="erp-table">
+                <thead>
+                    <tr>
+                        <th>Folio</th>
+                        <th>Cliente</th>
+                        <th>Asunto / Detalle</th>
+                        <th>Estado Actual</th>
+                        <th>Respuesta del Técnico</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaSoporteTickets">
+                    <tr><td colspan="6" style="text-align: center;">Cargando peticiones...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <style>
+    .main-footer {
+        background-color: #0f172a; /* Fondo oscuro / negro */
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 16px;
+        margin-top: 40px;
+        border-top: 1px solid #1e293b;
+        font-size: 0.9rem;
+    }
+
+    .main-footer p {
+        margin: 0;
+        color: #94a3b8;
+    }
+
+    .main-footer strong {
+        color: #ffffff;
+    }
+</style>
+
+<footer class="main-footer">
+    <p>&copy; <span id="copyrightYear"></span> <strong>SAFO</strong>. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    // Inserción dinámica del año actual
+    document.addEventListener('DOMContentLoaded', () => {
+        const yearSpan = document.getElementById('copyrightYear');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    });
+</script>
+
+    <script src="script/config.js"></script>
+    <script>
+        if (sessionStorage.getItem('soporte_session') !== 'true') {
+            window.location.href = 'soporte-login.html';
+        }
+
+        function logoutSoporte() {
+            sessionStorage.removeItem('soporte_session');
+            window.location.href = 'soporte-login.html';
+        }
+
+        async function cargarTicketsSoporte() {
+            const tbody = document.getElementById('tablaSoporteTickets');
+            try {
+                const tickets = await apiRequest('/tickets');
+                tbody.innerHTML = tickets.map(t => `
+                    <tr>
+                        <td><strong>#${t.id.toString().substring(0,6)}</strong></td>
+                        <td>${t.cliente ? t.cliente.nombre : 'General'}</td>
+                        <td>
+                            <strong>${t.asunto}</strong><br>
+                            <small style="color: #64748b;">${t.descripcion || 'Sin detalle'}</small>
+                        </td>
+                        <td>
+                            <select onchange="cambiarEstado('${t.id}', this.value)" style="padding: 4px; border-radius: 4px;">
+                                <option value="PENDIENTE" ${t.estado === 'PENDIENTE' ? 'selected' : ''}>PENDIENTE</option>
+                                <option value="EN_PROCESO" ${t.estado === 'EN_PROCESO' ? 'selected' : ''}>EN PROCESO</option>
+                                <option value="RESUELTO" ${t.estado === 'RESUELTO' ? 'selected' : ''}>RESUELTO</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" id="resp-${t.id}" value="${t.respuestaSoporte || ''}" placeholder="Escribe la respuesta..." style="width: 100%; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 4px;">
+                        </td>
+                        <td>
+                            <button class="btn-resolver" onclick="guardarRespuesta('${t.id}')"><i class="fa fa-save"></i> Guardar</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch(e) {
+                tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">${e.message}</td></tr>`;
+            }
+        }
+
+        async function cambiarEstado(id, nuevoEstado) {
+            await apiRequest(`/tickets/${id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ estado: nuevoEstado })
+            });
+            alert('Estado actualizado');
+        }
+
+        async function guardarRespuesta(id) {
+            const respuesta = document.getElementById(`resp-${id}`).value;
+            await apiRequest(`/tickets/${id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ respuestaSoporte: respuesta })
+            });
+            alert('Respuesta enviada al cliente');
+        }
+
+        cargarTicketsSoporte();
+    </script>
+</body>
+</html>

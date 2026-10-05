@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo de Clientes - ERP SAFO</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .main-nav ul li a {
+            color: #ffffff !important;
+            text-decoration: none !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .main-nav ul li a:hover {
+            text-decoration: none !important;
+            color: #dbeafe !important;
+        }
+
+        .module-container { padding: 24px 32px; max-width: 1200px; margin: auto; }
+        .tab-bar { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 2px solid #cbd5e1; padding-bottom: 12px; }
+        .tab-btn { background: #fff; border: 1px solid #cbd5e1; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.95rem; }
+        .tab-btn.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+        .tab-btn i { margin-right: 6px; }
+
+        .client-card { background: #fff; border-radius: 12px; padding: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+        .form-group label { font-size: 0.85rem; font-weight: 600; color: #475569; }
+        
+        .form-group input { 
+            padding: 10px 14px; 
+            border: 1px solid #d1d5db; 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+            outline: none; 
+            color: #1e293b;
+            background-color: #fff;
+        }
+        .form-group input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+        .form-group input:focus { border-color: #2563eb; box-shadow: 0 0 0 2px rgba(37,99,235,0.1); }
+
+        .btn-submit { background: #1e293b; color: #fff; padding: 14px 24px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; }
+        .btn-submit:hover { background: #0f172a; }
+
+        /* Estilos de la tabla de clientes */
+        table.erp-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        table.erp-table th, table.erp-table td { border: 1px solid #e2e8f0; padding: 12px 14px; text-align: left; font-size: 0.9rem; }
+        table.erp-table th { background: #f8fafc; font-weight: 600; color: #334155; }
+        .badge-rfc { background: #eff6ff; color: #1d4ed8; padding: 3px 8px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; }
+        .btn-ver-facturas { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: 600; }
+        .btn-ver-facturas:hover { background: #e2e8f0; }
+
+        /* Modal para ver facturas del cliente */
+        .modal-detalle { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-caja { background: #fff; border-radius: 12px; width: 90%; max-width: 650px; padding: 24px; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado Superior -->
+    <header class="top-header">
+        <div class="logo"><img src="assets/Logo.jpeg" alt="Logo Empresa"></div>
+        <div class="user-menu">
+            <span><i class="fa fa-user"></i> Administrador</span>
+        </div>
+    </header>
+
+    <!-- Menú de Navegación Principal -->
+    <nav class="main-nav">
+        <ul>
+            <li><a href="dashboard.html"><i class="fa fa-home"></i> Inicio</a></li>
+            <li><a href="facturas.html"><i class="fa fa-file-invoice"></i> Facturas</a></li>
+            <li class="active"><a href="clientes.html"><i class="fa fa-users"></i> Clientes</a></li>
+            <li><a href="tickets.html"><i class="fa fa-ticket-alt"></i> Tickets</a></li>
+            <li><a href="reportes.html"><i class="fa fa-chart-bar"></i> Reportes</a></li>
+        </ul>
+    </nav>
+
+    <div class="module-container">
+        <!-- Selector de Vista -->
+        <div class="tab-bar">
+            <button class="tab-btn active" id="tabListado"><i class="fa fa-list"></i> Directorio de Clientes</button>
+            <button class="tab-btn" id="tabCrear"><i class="fa fa-user-plus"></i> Alta de Cliente</button>
+        </div>
+
+        <!-- VISTA 1: LISTADO DE CLIENTES -->
+        <div id="vistaListado" class="client-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="color: #1e293b;">Clientes Registrados</h3>
+                <span id="contadorClientes" style="font-weight: 600; color: #2563eb;">Total: 0</span>
+            </div>
+
+            <table class="erp-table">
+                <thead>
+                    <tr>
+                        <th>Razón Social / Nombre</th>
+                        <th>Alias</th>
+                        <th>RFC</th>
+                        <th>C.P.</th>
+                        <th>Régimen Fiscal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaClientesBody">
+                    <tr><td colspan="6" style="text-align: center; color: #64748b;">Cargando clientes...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- VISTA 2: FORMULARIO DE ALTA -->
+        <div id="vistaFormulario" class="client-card" style="display: none; max-width: 700px; margin: auto;">
+            <h3 style="margin-bottom: 20px; color: #1e293b;">Alta de Nuevo Cliente</h3>
+            <form id="clienteForm">
+                <div class="form-group">
+                    <label>Razón Social / Nombre Completo *</label>
+                    <input type="text" id="cliNombre" placeholder="Ej. Comercializadora ABC S.A. de C.V." required>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Alias Comercial (Opcional)</label>
+                        <input type="text" id="cliAlias" placeholder="Ej. ABC Mérida">
+                    </div>
+                    <div class="form-group">
+                        <label>RFC *</label>
+                        <input type="text" id="cliRfc" placeholder="XAXX010101000" required maxlength="13" style="text-transform: uppercase;">
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Código Postal Fiscal</label>
+                        <input type="text" id="cliCp" placeholder="97000" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label>Régimen Fiscal</label>
+                        <input type="text" id="cliRegimen" placeholder="601 - General de Ley Personas Morales">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" style="width: 100%; margin-top: 10px;">
+                    <i class="fa fa-save"></i> Guardar Cliente
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Detalle Cliente -->
+    <div id="modalClienteDetalle" class="modal-detalle">
+        <div class="modal-caja">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                <h3 id="modalNombreCliente" style="color: #1e293b; margin: 0;">Detalle del Cliente</h3>
+                <span onclick="cerrarModalDetalle()" style="cursor: pointer; font-size: 1.5rem; color: #64748b;">&times;</span>
+            </div>
+            <div style="margin-top: 16px;">
+                <h4 style="color: #475569; margin-bottom: 8px;">Facturas Emitidas a este Cliente:</h4>
+                <div id="modalFacturasListado">
+                    <p style="color: #64748b;">Cargando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ <style>
+    /* Estructura para empujar el footer al fondo si hay poco contenido */
+    html, body {
+        height: 100%;
+        margin: 0;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .module-container, 
+    main, 
+    .content {
+        flex: 1 0 auto; /* Asegura que el contenedor principal ocupe el espacio restante */
+    }
+
+    /* Tu estilo personalizado de footer */
+    .main-footer {
+        background-color: #0f172a; /* Fondo oscuro / negro */
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 16px;
+        margin-top: 40px;
+        border-top: 1px solid #1e293b;
+        font-size: 0.9rem;
+        flex-shrink: 0; /* Evita que el footer se encoja */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .main-footer p {
+        margin: 0;
+        color: #94a3b8;
+    }
+
+    .main-footer strong {
+        color: #ffffff;
+    }
+</style>
+
+<footer class="main-footer">
+    <p>&copy; <span id="copyrightYear"></span> <strong>SAFO</strong>. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    // Inserción dinámica del año actual
+    document.addEventListener('DOMContentLoaded', () => {
+        const yearSpan = document.getElementById('copyrightYear');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    });
+</script>
+
+    <script src="script/config.js"></script>
+    <script src="script/clientes.js"></script>
+</body>
+</html>

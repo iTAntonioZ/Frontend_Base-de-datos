@@ -32,6 +32,39 @@
     </form>
   </main>
 
+<style>
+    .main-footer { /* Fondo oscuro / negro */
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 16px;
+        margin-top: 40px;
+        font-size: 0.9rem;
+    }
+
+    .main-footer p {
+        margin: 0;
+        color: #00040a;
+    }
+
+    .main-footer strong {
+        color: #ffffff;
+    }
+</style>
+
+<footer class="main-footer">
+    <p>&copy; <span id="copyrightYear"></span> <strong>SAFO</strong>. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    // Inserción dinámica del año actual
+    document.addEventListener('DOMContentLoaded', () => {
+        const yearSpan = document.getElementById('copyrightYear');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    });
+</script>
+
   <script src="script/config.js"></script>
   <script src="script/auth.js"></script>
 </body>

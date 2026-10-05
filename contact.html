@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - ERP SAFO</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .module-container { padding: 32px; max-width: 1000px; margin: auto; }
+        
+        /* Menú Hamburguesa Flotante */
+        .floating-menu-container { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+        
+        .btn-hamburger {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background-color: #10b981;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s;
+        }
+        .btn-hamburger:hover { transform: scale(1.05); }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+            padding: 12px 0;
+            min-width: 180px;
+            border: 1px solid #e2e8f0;
+        }
+        .dropdown-menu.show { display: block; }
+
+        .dropdown-menu a, .dropdown-menu button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .dropdown-menu a:hover, .dropdown-menu button:hover { background-color: #f8fafc; }
+        .dropdown-divider { height: 1px; background-color: #e2e8f0; margin: 8px 0; }
+        .text-login { color: #2563eb !important; font-weight: 600 !important; }
+        .text-logout { color: #ef4444 !important; font-weight: 600 !important; }
+
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+        @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+
+        .card { background: #fff; border-radius: 12px; padding: 28px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .card h3 { font-size: 1.2rem; color: #1e293b; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+        .contact-item { display: flex; align-items: center; gap: 16px; padding: 14px; border: 1px solid #f1f5f9; border-radius: 10px; margin-bottom: 14px; background: #f8fafc; text-decoration: none; color: inherit; transition: all 0.2s; }
+        .contact-item:hover { border-color: #2563eb; background: #eff6ff; transform: translateY(-2px); }
+        .contact-icon { width: 46px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: #fff; }
+        
+        .icon-wsp { background: #25d366; }
+        .icon-mail { background: #2563eb; }
+
+        .contact-info strong { display: block; font-size: 0.95rem; color: #1e293b; }
+        .contact-info span { font-size: 0.85rem; color: #64748b; }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .form-group label { font-size: 0.85rem; font-weight: 600; color: #475569; }
+        .form-group input, .form-group textarea { padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem; outline: none; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+
+        .btn-send { background: #2563eb; color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .btn-send:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="logo"><img src="assets/Logo.jpeg" alt="Logo Empresa"></div>
+    </header>
+
+    <!-- Menú Hamburguesa Flotante -->
+    <div class="floating-menu-container">
+        <button class="btn-hamburger" id="toggleMenuBtn" onclick="toggleNavMenu()">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="dropdown-menu" id="navDropdown">
+            <a href="index.html"><i class="fa-solid fa-house"></i> Inicio</a>
+            <a href="licencia.html"><i class="fa-solid fa-lock"></i> Licencia</a>
+            <a href="contact.html"><i class="fa-solid fa-phone"></i> Contáctanos</a>
+            <div class="dropdown-divider"></div>
+            <div id="authMenuAction"></div>
+        </div>
+    </div>
+
+    <div class="module-container">
+        <h2>Medios de Contacto y Atención</h2>
+        <p style="color: #64748b; margin-top: 4px;">Comunícate directamente con nuestro equipo de ventas y soporte técnico.</p>
+
+        <div class="contact-grid">
+            <div class="card">
+                <h3><i class="fa fa-headset text-blue"></i> Canales Directos</h3>
+                
+                <a href="https://wa.me/529995275519" target="_blank" class="contact-item">
+                    <div class="contact-icon icon-wsp"><i class="fab fa-whatsapp"></i></div>
+                    <div class="contact-info">
+                        <strong>Atención por WhatsApp</strong>
+                        <span>+52 999 527 5519</span>
+                    </div>
+                </a>
+
+                <a href="mailto:safoventas@safo.com.mx" class="contact-item">
+                    <div class="contact-icon icon-mail"><i class="fa fa-envelope"></i></div>
+                    <div class="contact-info">
+                        <strong>Correo de Ventas</strong>
+                        <span>safoventas@safo.com.mx</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="card">
+                <h3><i class="fa fa-paper-plane text-blue"></i> Envíanos un Mensaje</h3>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" placeholder="correo@empresa.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mensaje</label>
+                        <textarea placeholder="¿En qué te podemos ayudar?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-send"><i class="fa fa-paper-plane"></i> Enviar Consulta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    .main-footer {
+        background-color: #0f172a; /* Fondo oscuro / negro */
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 16px;
+        margin-top: 40px;
+        border-top: 1px solid #1e293b;
+        font-size: 0.9rem;
+    }
+
+    .main-footer p {
+        margin: 0;
+        color: #94a3b8;
+    }
+
+    .main-footer strong {
+        color: #ffffff;
+    }
+</style>
+
+<footer class="main-footer">
+    <p>&copy; <span id="copyrightYear"></span> <strong>SAFO</strong>. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    // Inserción dinámica del año actual
+    document.addEventListener('DOMContentLoaded', () => {
+        const yearSpan = document.getElementById('copyrightYear');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    });
+</script>
+
+    <script src="script/config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAuthOption();
+        });
+
+        function toggleNavMenu() {
+            document.getElementById('navDropdown').classList.toggle('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.floating-menu-container')) {
+                const dropdown = document.getElementById('navDropdown');
+                if (dropdown && dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        };
+
+        function renderAuthOption() {
+            const container = document.getElementById('authMenuAction');
+            if (typeof Auth !== 'undefined' && Auth.isSessionValid && Auth.isSessionValid()) {
+                container.innerHTML = `
+                    <button onclick="cerrarSesion()" class="text-logout">
+                        <i class="fa-solid fa-right-from-bracket"></i> Salir
+                    </button>
+                `;
+            } else {
+                container.innerHTML = `
+                    <a href="auth.html" class="text-login">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login
+                    </a>
+                `;
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.clear();
+            sessionStorage.clear();
+            if (typeof Auth !== 'undefined' && typeof Auth.logout === 'function') {
+                Auth.logout();
+            } else {
+                window.location.href = 'auth.html';
+            }
+        }
+
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('¡Gracias por comunicarte! Tu mensaje ha sido enviado correctamente.');
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>

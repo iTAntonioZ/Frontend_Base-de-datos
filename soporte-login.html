@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Mesa de Ayuda - SAFO</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="auth-page">
+    <a href="index.html" class="btn-volver">← Volver al sitio</a>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2 class="auth-title">Acceso Mesa de Soporte</h2>
+            <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 12px;">Ingreso exclusivo para personal técnico</p>
+            
+            <form id="soporteLoginForm">
+                <div class="form-group">
+                    <label>Usuario Técnico</label>
+                    <input type="text" id="sopUser" placeholder="soporte" required>
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="sopPass" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-submit" style="width:100%; margin-top:10px;">Ingresar a Soporte</button>
+            </form>
+        </div>
+    </div>
+
+<style>
+    .main-footer {
+        background-color: #0f172a; /* Fondo oscuro / negro */
+        color: #ffffff;
+        text-align: center;
+        padding: 20px 16px;
+        margin-top: 40px;
+        border-top: 1px solid #1e293b;
+        font-size: 0.9rem;
+    }
+
+    .main-footer p {
+        margin: 0;
+        color: #94a3b8;
+    }
+
+    .main-footer strong {
+        color: #ffffff;
+    }
+</style>
+
+<footer class="main-footer">
+    <p>&copy; <span id="copyrightYear"></span> <strong>SAFO</strong>. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    // Inserción dinámica del año actual
+    document.addEventListener('DOMContentLoaded', () => {
+        const yearSpan = document.getElementById('copyrightYear');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    });
+</script>
+
+    <script>
+        document.getElementById('soporteLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = document.getElementById('sopUser').value.trim();
+            const p = document.getElementById('sopPass').value.trim();
+
+            if (u === 'soporte' && p === 'admin123') {
+                sessionStorage.setItem('soporte_session', 'true');
+                window.location.href = 'soporte-panel.html';
+            } else {
+                alert('Credenciales de soporte inválidas.');
+            }
+        });
+    </script>
+</body>
+</html>
