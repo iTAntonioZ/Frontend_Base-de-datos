@@ -5,7 +5,7 @@ const isLocalhost = Boolean(
 );
 
 // URL del túnel limpia (sin barra final)
-const TUNNEL_API_URL = 'https://pod-decided-himself-plains.trycloudflare.com';
+const TUNNEL_API_URL = 'https://asus-contributed-sierra-additions.trycloudflare.com';
 
 const API_URL = isLocalhost ? 'http://localhost:3000' : TUNNEL_API_URL;
 
